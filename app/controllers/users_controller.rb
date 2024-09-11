@@ -10,6 +10,10 @@ class UsersController < ApplicationController
 
   def index
     @users = User.paginate(page: params[:page], per_page: 5)
+    respond_to do |format|
+      format.html 
+      format.json { render json: @users }
+    end
   end
 
   def new
@@ -30,14 +34,21 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    if @user.save
-      session[:user_id] = @user.id
-      flash[:notice] = "Welcome to the Alpha Blog #{@user.username}, you have successfully signed up"
-      redirect_to articles_path
-    else
-      render "new", status: :unprocessable_entity
+  
+    respond_to do |format|
+      if @user.save
+        session[:user_id] = @user.id
+        flash[:notice] = "Welcome to the Alpha Blog #{@user.username}, you have successfully signed up"
+  
+        format.html { redirect_to articles_path }
+        format.json { render json: @user, status: :created }
+      else
+        format.html { render "new", status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
     end
   end
+  
 
   def destroy
     @user.destroy
