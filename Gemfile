@@ -9,6 +9,8 @@ gem "bootstrap"
 
 gem "sassc-rails"
 
+gem 'rswag'
+
 # The original asset pipeline for Rails [https://github.com/rails/sprockets-rails]
 gem "sprockets-rails"
 
